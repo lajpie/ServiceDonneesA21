@@ -1,0 +1,21 @@
+{
+  "name": "semaine02",
+  "version": "1.0.0",
+  "description": "demonstration du cours",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js --inspect"
+  },
+  "author": "Pierre-Antoine Lajoie",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "dayjs": "^1.10.6",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
