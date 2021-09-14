@@ -1,6 +1,6 @@
 import express from 'express';
 import HttpError from 'http-errors';
-import Http from 'http-status';
+import HttpStatus from 'http-status';
 
 import PLANETS from '../data/planets.js';
 
@@ -9,9 +9,12 @@ const router = express.Router();
 class PlanetsRoutes {
     constructor(){
         // Définition des routes pour la ressource planet
-        router.get('/planets', this.getAll); //Retrieve toutes les planètes
-        router.get('/planets/:idPlanet', this.getOne)
-        router.post('/planets', this.post)
+        router.get('/', this.getAll); //Retrieve toutes les planètes
+        router.get('/:idPlanet', this.getOne);
+        router.post('/', this.post);
+        router.delete('/:idPlanet',this.deleteOne);
+        router.patch('/:idPlanet',this.patch);
+        router.put('/:idPlanet',this.put);
     }
 
     getAll(req, res){
@@ -32,7 +35,7 @@ class PlanetsRoutes {
         //         break;
         //     }
         // };
-        const planet =PLANETS.find(p => p.id == idPlanet)
+        const planet =PLANETS.find(p => p.id == idPlanet);
         console.log(planet);
 
         if(!planet){
@@ -47,7 +50,40 @@ class PlanetsRoutes {
     }
 
     post(req,res,next){
-        
+        //console.log(req.body);
+
+        const newPlanet = req.body;
+
+        const planet =PLANETS.find(p => p.id == newPlanet.id);
+        if (planet) {
+            //find as trouver une planette, Jai un doublon ===== Erreur
+            return next(HttpError.Conflict(`Une planète avec l'identifiant ${newPlanet.id} existe déjà`));
+        } else {
+            PLANETS.push(newPlanet);
+            res.status(201);
+            res.json(newPlanet);
+        }
+    }
+
+    deleteOne(req,res,next){
+        const idPlanet = req.params.idPlanet;
+
+        const index = PLANETS.findIndex(i => i.id == idPlanet);
+        if (index === -1) {
+            return next(HttpError.NotFound(`La plantète avec le id ${idPlanet} nexiste pas`));
+        } else {
+            PLANETS.splice(index, 1);
+            res.status(204).end();
+        }
+
+    }
+
+    patch(req,res,next){
+        return next(HttpError.NotImplemented());
+    }
+
+    put(req,res,next){
+        return next(HttpError.NotImplemented());
     }
 }
 
