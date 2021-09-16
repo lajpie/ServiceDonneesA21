@@ -4,6 +4,8 @@ import HttpStatus from 'http-status';
 
 import PLANETS from '../data/planets.js';
 
+import planetsRepository from '../repositories/planets.repository.js';
+
 const router = express.Router();
 
 class PlanetsRoutes {
@@ -17,33 +19,44 @@ class PlanetsRoutes {
         router.put('/:idPlanet',this.put);
     }
 
-    getAll(req, res){
-        res.status(200);
-        res.set('Content-Type', 'application/json');
+    async getAll(req, res){
 
-        res.send(PLANETS);
+        const filter = {};
+        if(req.query.explorer) {
+            filter.discoveredBy = req.query.explorer;
+        }
+
+        try {
+            
+            const planets = await planetsRepository.retireveAll(filter);
+            res.status(200).json(planets);
+
+        } catch (err) {
+            return next(err);
+        }
     }
-
-    getOne(req, res, next){
+    
+    async getOne(req, res, next){
         const idPlanet = req.params.idPlanet;
-        
-        //1. La planete existe = 200 - ok
-        // let planet;
-        // for(let p of PLANETS){
-        //     if (p.id == idPlanet) {
-        //         planet = p;
-        //         break;
-        //     }
-        // };
-        const planet =PLANETS.find(p => p.id == idPlanet);
-        console.log(planet);
 
-        if(!planet){
+        try{
 
-           return next(HttpError.NotFound(`La plantète avec le id ${idPlanet} nexiste pas`));
+            
+            
+            const planet = await planetsRepository.retrieveById(idPlanet);
+            console.log(planet);
+    
+            if(!planet){
+    
+               return next(HttpError.NotFound(`La plantète avec le id ${idPlanet} nexiste pas`));
+    
+            } else {
+                res.status(200).json(planet); // fait le content type et send la reponse // ou res.json(planets[0]);
+            }
 
-        } else {
-            res.status(200).json(planet); // fait le content type et send la reponse // ou res.json(planets[0]);
+
+        } catch (err) {
+            return next(err);
         }
 
         
