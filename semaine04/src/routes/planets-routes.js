@@ -1,5 +1,6 @@
 import express from 'express';
 import HttpError from 'http-errors';
+import httpStatus from 'http-status';
 import HttpStatus from 'http-status';
 
 import PLANETS from '../data/planets.js';
@@ -19,16 +20,36 @@ class PlanetsRoutes {
         router.put('/:idPlanet',this.put);
     }
 
-    async getAll(req, res){
+    async getAll(req, res, next){
 
+        //critères pour la BD
         const filter = {};
         if(req.query.explorer) {
             filter.discoveredBy = req.query.explorer;
         }
+        
+        //paramètres de transformation
+        const transformOption = {};
+        if (req.query.unit) {
+
+            if (req.query.unit === 'c') {
+                transformOption.unit = req.query.unit;
+            } else {
+                return next(HttpError.BadRequest('Le paramètre doit avoir la valeur c pour Celsius'));
+            }
+        }
 
         try {
             
-            const planets = await planetsRepository.retireveAll(filter);
+           let planets = await planetsRepository.retrieveAll(filter);
+
+            //je veux un nouveau tableau des planetès transformée
+            planets = planets.map(p=> {
+                p = p.toObject({getters:true, virtuals:false});
+                p = planetsRepository.transform(p, transformOption);
+                return p;
+            });
+
             res.status(200).json(planets);
 
         } catch (err) {
@@ -41,17 +62,31 @@ class PlanetsRoutes {
 
         try{
 
+            //paramètres de transformation
+        const transformOption = {};
+        if (req.query.unit) {
+
+            if (req.query.unit === 'c') {
+                transformOption.unit = req.query.unit;
+            } else {
+                return next(HttpError.BadRequest('Le paramètre doit avoir la valeur c pour Celsius'));
+            }
+        }
             
-            
-            const planet = await planetsRepository.retrieveById(idPlanet);
+            let planet = await planetsRepository.retrieveById(idPlanet);
             console.log(planet);
+
+
     
             if(!planet){
     
                return next(HttpError.NotFound(`La plantète avec le id ${idPlanet} nexiste pas`));
     
             } else {
+                planet = planet.toObject({getters:true, virtuals:false});
+                planet = planetsRepository.transform(planet, transformOption);
                 res.status(200).json(planet); // fait le content type et send la reponse // ou res.json(planets[0]);
+
             }
 
 
@@ -62,32 +97,42 @@ class PlanetsRoutes {
         
     }
 
-    post(req,res,next){
-        //console.log(req.body);
-
+    async post(req,res,next){
         const newPlanet = req.body;
+        //TODO: validation rapide jusqu'à la semaine +/- 8
 
-        const planet =PLANETS.find(p => p.id == newPlanet.id);
-        if (planet) {
-            //find as trouver une planette, Jai un doublon ===== Erreur
-            return next(HttpError.Conflict(`Une planète avec l'identifiant ${newPlanet.id} existe déjà`));
-        } else {
-            PLANETS.push(newPlanet);
-            res.status(201);
-            res.json(newPlanet);
+        try {
+            
+            let planetAdded = await planetsRepository.create(newPlanet);
+            planetAdded = planetAdded.toObject({getters:true, virtuals:false});
+            planetAdded = planetsRepository.transform(planetAdded);
+
+            res.status(201).json(planetAdded);
+
+        } catch (err) {
+            return next(err);
         }
     }
 
-    deleteOne(req,res,next){
+    async deleteOne(req,res,next){
         const idPlanet = req.params.idPlanet;
 
-        const index = PLANETS.findIndex(i => i.id == idPlanet);
-        if (index === -1) {
-            return next(HttpError.NotFound(`La plantète avec le id ${idPlanet} nexiste pas`));
-        } else {
-            PLANETS.splice(index, 1);
-            res.status(204).end();
+        
+        try {
+
+            let planetDestroyed = await planetsRepository.delete(idPlanet);
+            console.log(planetDestroyed);
+            if (!planetDestroyed) {
+                return next(HttpError.NotFound(`La plantète avec le id ${idPlanet} nexiste pas`));
+            } else {
+                
+                res.status(204).end();
+            }
+        } catch (err) {
+            return next(err);
         }
+
+        
 
     }
 
