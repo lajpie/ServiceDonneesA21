@@ -9,8 +9,17 @@
    
 }
 
-.nom-planet{
+.card-title{
 
     font-family: 'Gemunu Libre', sans-serif;
     font-size: 1.5em;
+}
+
+a:link, a:visited{
+    color: black;
+}
+
+#imgIcon{
+    width: 128px;
+    height: auto;
 }
