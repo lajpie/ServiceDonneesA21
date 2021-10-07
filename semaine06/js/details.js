@@ -11,31 +11,68 @@ const urlParams = {};
     while ((match = search.exec(query))) urlParams[decode(match[1])] = decode(match[2]);
 })();
 
-$(document).ready(()=> {
+$(document).ready(() => {
 
-  //  console.log(urlParams);
+    //  console.log(urlParams);
     getPlanet(urlParams.planet);
+
+    $('#btnAddPortal').click(()=>{
+        addPortal();
+    });
 
 });
 
-async function getPlanet(url){
+function addPortal() {
+const position = $('#txtPosition').val();
+const affinity =  $('#cboAffinity').val();
+
+console.log(position);
+console.log(affinity);
+};
+
+async function getPlanet(url) {
     const response = await axios.get(url);
-    if(response.status === 200) {
+    if (response.status === 200) {
         const planet = response.data;
         console.log(planet);
 
-        //TODO: IMG
         $('#imgIcon').attr('src', planet.icon);
-        //TODO: Nom
         $('#lblName').html(planet.name);
-        //TODO: Découvert par
         $('#lblDiscovery').html(planet.discoveredBy);
+        $('#lblDiscoveryDate').html(planet.discoveryDate);
+        $('#lblTemperature').html(planet.temperature);
+        $('#lblPosition').html(`( ${planet.position.x.toFixed(3)} ; ${planet.position.y.toFixed(3)} ; ${planet.position.z.toFixed(3)} )`);
 
-        //TODO: DiscoveryDate
-        $('#lblDiscoveryDate').html(planet.discoveryDate)
-        //Todo: temperature
-        $('#lblTemperature').html(planet.temperature)
-        //TODO:Position
-        $('#lblPosition').html(`( ${planet.position.x.toFixed(3)} ; ${planet.position.y.toFixed(3)} ; ${planet.position.z.toFixed(3)} )`)
+        //Satellites
+
+        let satellitesHtml = '';
+        if (planet.satellites.length === 0) {
+            satellitesHtml += `<li>Aucun satellite</li>`;
+        }
+        else {
+            planet.satellites.forEach(s => {
+                satellitesHtml += `<li>${s}</li>`;
+            });
+        }
+        $('#satellites').html(satellitesHtml);
+
+        displayPortals(planet.portals);
+
     };
 };
+
+function displayPortals(portals){
+
+    let portalsHtml ='';
+    portals.forEach(p =>{
+
+        portalsHtml += '<tr>';
+        //3. Dans chaque tr, deux td (position, affinity)
+        portalsHtml += `<td>${p.position}</td>`
+        portalsHtml += `<td><img src="img/${p.affinity}.png" alt="${p.affinity}" title="${p.affinity}"/></td>`
+        portalsHtml += '</tr>';
+    });
+
+    //4. ajouter la chaine dans la page
+    $('#portals tbody').html(portalsHtml);
+}
