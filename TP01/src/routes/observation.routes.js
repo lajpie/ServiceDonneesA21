@@ -14,6 +14,7 @@ class ObservationRoutes {
         router.delete('/:idObservation', this.deleteOne); //supprimer une observation spécifique
     }
 
+    // ---------------------------------------------- à ne pas faire I guess?
     async deleteOne(req, res, next) {
         const idObservation = req.params.idObservation;
 

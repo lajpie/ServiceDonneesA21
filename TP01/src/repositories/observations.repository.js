@@ -54,12 +54,20 @@ class ObservationsRepository {
 
         observation.observationDate = dayjs(observation.observationDate).format('YYYY-MM-DD');
 
-        //HexMatrix => parseInt
+        
+
 
         let alpha = 0;
         let beta = 0;
         let gamma = 0;
         let delta = 0;
+        observation.hexMatrix.forEach(h => {
+            alpha += h.parseInt;
+            beta *= h.parseInt;
+        });
+        gamma = beta / alpha;
+        delta = beta % alpha;
+        
 
         observation.hex = { alpha, beta, gamma, delta };
 

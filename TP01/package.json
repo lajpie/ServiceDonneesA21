@@ -1,7 +1,7 @@
 {
-  "name": "TP01",
+  "name": "semaine02",
   "version": "1.0.0",
-  "description": "travail pratique",
+  "description": "Travail pratique 1",
   "main": "server.js",
   "type": "module",
   "scripts": {
