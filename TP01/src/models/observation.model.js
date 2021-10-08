@@ -1,7 +1,7 @@
 
 import mongoose from "mongoose";
 
-const stationSchema= mongoose.Schema({
+const observationSchema= mongoose.Schema({
     location:{
         station: {type:String, unique:true, required:true, uppercase:true},
         coord:{
@@ -26,9 +26,9 @@ const stationSchema= mongoose.Schema({
 
 
 }, {
-    collection:'stations',
+    collection:'observations',
     strict:'throw'
 });
 
-export default mongoose.model('Station', stationSchema);
+export default mongoose.model('Observation', observationSchema);
 

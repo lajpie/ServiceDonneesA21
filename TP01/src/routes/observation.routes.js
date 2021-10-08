@@ -1,11 +1,11 @@
 //TODO toutes les Requests lmao
 import { Express } from "express";
 import { HttpError } from "http-errors";
-import stationsRepository from "../repositories/stations.repository";
+import ObservationRepository from "../repositories/observations.repository";
 
 const router = Express.router();
 
-class StationsRoutes{
+class ObservationRoutes{
 
     constructor(){
         router.get('/observations/:stationName', this.getAll); // obtenir la liste des observation d'une station
@@ -19,7 +19,7 @@ class StationsRoutes{
 
         try {
             
-            let observationDestroyed = await stationsRepository.delete(idObservation);
+            let observationDestroyed = await ObservationRepository.delete(idObservation);
             console.log(observationDestroyed);
             if (!observationDestroyed) {
                 return next (HttpError.NotFound(`L'observation avec le id ${idObservation}n'existe pas`));
@@ -33,7 +33,13 @@ class StationsRoutes{
 
     }
 
+    async post(req,res,next){
+        const newObservation = req.body;
+
+
+    }
+
 }
 
-new StationsRoutes();
+new ObservationRoutes();
 export default router;
