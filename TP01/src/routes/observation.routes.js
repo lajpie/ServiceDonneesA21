@@ -1,18 +1,17 @@
 //TODO toutes les Requests lmao
-import { Express } from "express";
-import { HttpError } from "http-errors";
-import observationsRepository from "../repositories/observations.repository";
-import ObservationsRepository from "../repositories/observations.repository";
+import  express  from "express";
+import  HttpError  from "http-errors";
+import ObservationsRepository from "../repositories/observations.repository.js";
 
-const router = Express.router();
+const router = new express.Router();
 
 class ObservationRoutes {
 
     constructor() {
-        router.get('/observations/:stationName', this.getAll); // obtenir la liste des observation d'une station
-        router.get('/observations/:stationName/:idObservation', this.getOne); //obtenir une observation spécifique d'une station
-        router.post('/observations', this.post); // ajouter une observation météo
-        router.delete('/observations/:idObservation', this.deleteOne); //supprimer une observation spécifique
+        router.get('/:stationName', this.getAll); // obtenir la liste des observation d'une station
+        router.get('/:stationName/:idObservation', this.getOne); //obtenir une observation spécifique d'une station
+        router.post('/', this.post); // ajouter une observation météo
+        router.delete('/:idObservation', this.deleteOne); //supprimer une observation spécifique
     }
 
     async deleteOne(req, res, next) {

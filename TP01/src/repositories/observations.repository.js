@@ -62,7 +62,9 @@ class ObservationsRepository {
         let delta = 0;
 
         observation.hex = { alpha, beta, gamma, delta };
-        //delete observation.__v;
+
+        delete observation.hexMatrix;
+        delete observation.__v;
 
         return observation;
 
