@@ -21,7 +21,7 @@ class ObservationsRepository {
     }
 
     delete(idObservation) {
-        return Station.findByIdAndDelete(idObservation);
+        return Observation.findByIdAndDelete(idObservation);
     }
 
     create(observation) {
