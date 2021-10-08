@@ -5,9 +5,9 @@ import dayjs from 'dayjs';
 
 class StationsRepository{
 
-delete(idStation)
+delete(idObservation)
 {
-    return Station.findByIdAndDelete(idStation);
+    return Station.findByIdAndDelete(idObservation);
 }
 
 create(station)
@@ -16,3 +16,5 @@ create(station)
 }
 
 }
+
+export default new StationsRepository();

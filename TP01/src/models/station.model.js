@@ -1,4 +1,4 @@
-//TODO: modele de la station utilisé pour la création
+
 import mongoose from "mongoose";
 
 const stationSchema= mongoose.Schema({
