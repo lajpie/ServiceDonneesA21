@@ -14,19 +14,21 @@ class ObservationRoutes {
         router.delete('/:idObservation', this.deleteOne); //supprimer une observation spécifique
     }
 
-    // ---------------------------------------------- à ne pas faire I guess?
+    
     async deleteOne(req, res, next) {
         const idObservation = req.params.idObservation;
 
         try {
+            // -- si on veut faire le delete
+            // let observationDestroyed = await ObservationsRepository.delete(idObservation);
+            // console.log(observationDestroyed);
+            // if (!observationDestroyed) {
+            //     return next(HttpError.NotFound(`L'observation avec le id ${idObservation}n'existe pas`));
+            // } else {
+            //     res.status(204).end();
+            // }
+            res.status(405).end(); // not allowed
 
-            let observationDestroyed = await ObservationsRepository.delete(idObservation);
-            console.log(observationDestroyed);
-            if (!observationDestroyed) {
-                return next(HttpError.NotFound(`L'observation avec le id ${idObservation}n'existe pas`));
-            } else {
-                res.status(204).end();
-            }
 
         } catch (error) {
             return next(error);
@@ -69,13 +71,13 @@ class ObservationRoutes {
                 }
             }
 
-            let observation = await observationsRepository.retrieveById(idObservation);
+            let observation = await ObservationsRepository.retrieveById(idObservation);
 
             if (!observation) {
                 return next(HttpError.NotFound(`L'observation avec le id ${idObservation}n'existe pas`));
             } else {
                 observation = observation.toObject({ getters: true, virtuals: false });
-                observation = observation.transform(observation, transformOption);
+                observation = ObservationsRepository.transform(observation, transformOption);
                 res.status(200).json(observation);
             }
 
@@ -91,7 +93,8 @@ class ObservationRoutes {
     async getAll(req, res, next) {
 
         //critères pour la BD
-        const filter = req.params.stationName;
+        const filter = {}
+        filter.location = req.params.stationName; //TODO: trouver un moyen de lui donner .location.station
 
 
         //paramètres de transformation

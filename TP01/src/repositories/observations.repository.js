@@ -13,16 +13,21 @@ class ObservationsRepository {
     }
 
     retrieveAll(filter) {
+
+        
         const testFilter = {
-            stationName: `${filter}`
+
+            'location.station': `${filter}`
+            
         }
 
         return Observation.find(filter);
     }
 
-    delete(idObservation) {
-        return Observation.findByIdAndDelete(idObservation);
-    }
+    // -- pour le delete
+    // delete(idObservation) {
+    //     return Observation.findByIdAndDelete(idObservation);
+    // }
 
     create(observation) {
         return Observation.create(observation);
@@ -51,19 +56,21 @@ class ObservationsRepository {
             }
 
         }
+    
 
         observation.observationDate = dayjs(observation.observationDate).format('YYYY-MM-DD');
 
         
-
+        const arr = ["N","NE","E", "SE","S","SW","W","NW"];
+        observation.wind.direction = arr[Math.floor((observation.wind.degree / 45) + 0.5) %8];
 
         let alpha = 0;
-        let beta = 0;
+        let beta = 1;
         let gamma = 0;
         let delta = 0;
         observation.hexMatrix.forEach(h => {
-            alpha += h.parseInt;
-            beta *= h.parseInt;
+            alpha += parseInt(h.toString(16), 16);
+            beta = beta * parseInt(h.toString(16), 16);
         });
         gamma = beta / alpha;
         delta = beta % alpha;
