@@ -1,3 +1,4 @@
+const ELEMENT_IMG_URL = 'https://assets.andromia.science/elements';
 const urlParams = {};
 (window.onpopstate = function () {
     let match;
@@ -16,18 +17,87 @@ $(document).ready(() => {
     //  console.log(urlParams);
     getPlanet(urlParams.planet);
 
-    $('#btnAddPortal').click(()=>{
+    // $('#txtPosition').blur(evt =>{
+    //     const t = evt.target.checkValidity();
+    //     console.log(t);
+    // }).bind('invalid', evt => {
+    //     console.log('invalid');
+    // });
+
+    $('#btnAddPortal').click(() => {
         addPortal();
+    });
+
+    $('#btnMiner').click(() => {
+        minePlanet();
     });
 
 });
 
-function addPortal() {
-const position = $('#txtPosition').val();
-const affinity =  $('#cboAffinity').val();
+async function minePlanet() {
 
-console.log(position);
-console.log(affinity);
+    //GET 
+    const MINING_URL = `${urlParams.planet}/actions?type=mine`;
+
+    const response = await axios.get(MINING_URL);
+    //console.log(response);
+    if (response.status === 200) {
+        const elements = response.data;
+        console.log(elements);
+
+        $('#extraction tbody').empty();
+        elements.forEach(e => {
+            let elementHtml = '';
+            elementHtml += '<tr>';
+
+            elementHtml += `<td><img class="element" src="${ELEMENT_IMG_URL}/${e.element}.png" alt="${e.element}" title="${e.element}"/>${e.element}</td>`;
+            elementHtml += `<td>${e.quantity}</td>`;
+            elementHtml += '</tr>';
+
+            
+        //4. ajouter la chaine dans la page
+        $('#extraction tbody').append(elementHtml);
+        });
+
+    } else {
+        console.log(response);
+    }
+
+}
+
+
+async function addPortal() {
+
+    const isPortalValid = document.getElementById('txtPosition').checkValidity();
+
+    if (isPortalValid) {
+
+        const position = $('#txtPosition').val();
+        const affinity = $('#cboAffinity').val();
+
+        const CREATE_PORTAL_URL = `${urlParams.planet}/portals`;
+
+        const body = {
+            position: position,
+            affinity: affinity
+        }
+
+        const response = await axios.post(CREATE_PORTAL_URL, body);
+
+        if (response.status === 201) {
+            const newPortal = response.data;
+            const portalHtml = displayNewPortal(newPortal);
+
+            $('#portals tbody').append(portalHtml);
+        } else {
+            console.log(response);
+        }
+
+    } else {
+        console.log('Portal dans un format invalide.');
+    }
+
+
 };
 
 async function getPlanet(url) {
@@ -61,18 +131,24 @@ async function getPlanet(url) {
     };
 };
 
-function displayPortals(portals){
+function displayPortals(portals) {
 
-    let portalsHtml ='';
-    portals.forEach(p =>{
-
-        portalsHtml += '<tr>';
-        //3. Dans chaque tr, deux td (position, affinity)
-        portalsHtml += `<td>${p.position}</td>`
-        portalsHtml += `<td><img src="img/${p.affinity}.png" alt="${p.affinity}" title="${p.affinity}"/></td>`
-        portalsHtml += '</tr>';
+    let portalsHtml = '';
+    portals.forEach(p => {
+        portalsHtml += displayNewPortal(p);
     });
 
     //4. ajouter la chaine dans la page
     $('#portals tbody').html(portalsHtml);
+}
+
+function displayNewPortal(p) {
+    let portalHtml = '';
+    portalHtml += '<tr>';
+    //3. Dans chaque tr, deux td (position, affinity)
+    portalHtml += `<td>${p.position}</td>`;
+    portalHtml += `<td><img src="img/${p.affinity}.png" alt="${p.affinity}" title="${p.affinity}"/></td>`;
+    portalHtml += '</tr>';
+
+    return portalHtml;
 }
