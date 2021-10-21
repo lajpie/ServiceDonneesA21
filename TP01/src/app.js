@@ -6,9 +6,7 @@ import database from './libs/database.js';
 import methodMiddlewares from './middlewares/method.js';
 import errorsMiddlewares from './middlewares/errors.js';
 
-// import planetsRoutes from './routes/planets-routes.js';
-// import elementsRoutes from './routes/elements.routes.js';
-
+import observationRoutes from './routes/observation.routes.js';
 database();
 const app = express();
 
@@ -16,10 +14,7 @@ app.use(express.json());
 
 app.use(methodMiddlewares);
 
-//----------------route des planetes, checker les stations
-// app.use('/planets',planetsRoutes);
-// app.use('/elements',elementsRoutes);
-
+app.use('/observations',observationRoutes);
 app.use(errorsMiddlewares);
 
 export default app;
