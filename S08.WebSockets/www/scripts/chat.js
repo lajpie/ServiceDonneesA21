@@ -15,7 +15,9 @@ $(document).ready(() => {
     $("#txtMessage").keypress(e => {
        if (e.keyCode === 13) {
         const message = {
-            text: $('#txtMessage').val() //GET
+            text: $('#txtMessage').val((i,v)=>{
+                return v.replace(/\r?\n|\r/g, '');
+            }).val('') //GET
         };
         socket.emit(IOEVENTS.SEND_MESSAGE,message);
         $('#txtMessage').val('') //GET SET
