@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@500&display=swap');
+
+
+a:link, a:visited{
+    color: black;
+}
+
+.imgIcon{
+    width: 128px;
+    height: auto;
+}
+
+td{
+    vertical-align: middle;
+    border-left: solid lightgray 3px;
+    border-right: solid lightgray 3px;
+    border-bottom: solid lightgray 3px;
+    text-align: center;
+    
+}
+
+
+th{
+    vertical-align: middle;
+    border: solid gray 3px;
+    text-align: center;
+    
+}
