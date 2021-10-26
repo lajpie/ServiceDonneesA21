@@ -22,28 +22,59 @@ httpServer.listen(PORT, () => {
 
 
 //Connexion des clients
-socketServer.on(IOEVENTS.CONNECTION, socket => {
+socketServer.on(IOEVENTS.CONNECTION,async (socket) => {
     console.log(socket.id);
 
+    await newUser(socket);
+
+    //réception d'un nouveau message
     socket.on(IOEVENTS.SEND_MESSAGE, message => {
         console.log(message);
         const messageToBroadcast = {
             socketId: socket.id,
             text: message.text,
-            timestamp: dayjs()
+            timestamp: dayjs(),
+            avatar: socket.data.identity.avatar,
+            name: socket.data.identity.name
         };
         socketServer.emit(IOEVENTS.NEW_MESSAGE, messageToBroadcast);
+    });
+
+    //réception d'une demande de changement de nom
+    socket.on(IOEVENTS.CHANGE_USERNAME, identity =>{
+        socket.data.identity.name = identity.name;
+        //TODO: changer avatar?
+        sendUserIdentities();
+    });
+
+
+    socket.on(IOEVENTS.DISCONNECT, reason =>{
+        console.log(reason);
+        sendUserIdentities();
     });
 
 });
 
 async function newUser(socket) {
 
+    const newUser = {
+        id:socket.id,
+        name: 'Anonyme',
+        avatar: randomAvatarImage()
+    };
+
+    socket.data.identity = newUser;
+    await sendUserIdentities();
 }
 
 
 async function sendUserIdentities() {
     
+const sockets = await socketServer.fetchSockets();
+const users = sockets.map(s => s.data.identity);
+
+socketServer.emit(IOEVENTS.LIST_USERS, users);
+
 }
 
 function randomAvatarImage() {
