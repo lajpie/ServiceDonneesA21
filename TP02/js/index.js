@@ -33,7 +33,7 @@ function displayMonsters(m) {
     monstersHtml += `${m.atlasNumber} <img src="${m.assets}" class="imgIcon"/>`
     monstersHtml += '</td>';
     //- name - link?
-    monstersHtml += `<td><a href="details.html?monstre=${m.name}" >${m.name}</a></td>`;
+    monstersHtml += `<td><a href="details.html?monstre=${m.atlasNumber}" >${m.name}</a></td>`;
     //- health
     monstersHtml += `<td>[ ${m.health.min} - ${m.health.max} ]</td>`;
     //- damage
