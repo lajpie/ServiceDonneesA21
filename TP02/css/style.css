@@ -26,3 +26,14 @@ th{
     text-align: center;
     
 }
+
+.colored-hash .block {
+    letter-spacing: -8px;
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    overflow: hidden;
+    padding: 0;
+    line-height: 1;
+    
+}
