@@ -1,4 +1,3 @@
-const ELEMENT_IMG_URL = 'https://assets.andromia.science/elements';
 const urlParams = {};
 (window.onpopstate = function () {
     let match;
@@ -67,7 +66,7 @@ function displaySpecimens(specimens){
 function displayNewSpecimen(s){
     let specimenHtml = '<tr>';
 
-    specimenHtml += `<td><img src="img/${s.affinity}.png"/></td>`;
+    specimenHtml += `<td><img src="img/affinities/${s.affinity}.png"/></td>`;
     specimenHtml += `<td>${s.health}</td>`;
     specimenHtml += `<td>${s.damage}</td>`;
     specimenHtml += `<td>${s.speed}</td>`;
@@ -98,13 +97,13 @@ function displayNewSpecimen(s){
 
 function displayTalent(t){
     let talentHtml = ''
-    talentHtml += `<img src="img/${t}.png"/>`;
+    talentHtml += `<img src="img/affinities/${t}.png"/>`;
     return talentHtml;
 }
 
 function displayKernel(k){
     let kernelHtml = '';
-    kernelHtml += `<img class="element" src="${ELEMENT_IMG_URL}/${k}.png" alt="${k}" title="${k}" style="width:50px"/>`;
+    kernelHtml += `<img class="element" src="img/elements/${k}.png" alt="${k}" title="${k}" style="width:50px"/>`;
     return kernelHtml;
 }
 
