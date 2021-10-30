@@ -134,8 +134,8 @@ function displayNewlocation(l) {
     let locationHtml = '<tr>';
     locationHtml += `<td>${l.position}</td>`;
     locationHtml += `<td>${l.time}</td>`;
-    locationHtml += `<td><img src="img/seasons/${l.season}"/></td>`;
-    locationHtml += `<td><img src="img/rarities/${l.rates}"/></td>`;
+    locationHtml += `<td><img src="img/seasons/${l.season}.png"/></td>`;
+    locationHtml += `<td><img src="img/rarities/${l.rates}.png"/></td>`;
     locationHtml += '</tr>';
     return locationHtml;
 }
