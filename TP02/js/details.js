@@ -22,11 +22,6 @@ $(document).ready(() => {
         generateMonster();
     });
 
-    $('#btnLocations').click(() => {
-        
-        
-        
-    });
 
 });
 
@@ -45,7 +40,7 @@ async function getMonster(url) {
         $('#lblCritical').html(`[ ${(monster.critical.min * 100).toFixed(2)} - ${(monster.critical.max * 100).toFixed(2)} ]%`);
 
         displaySpecimens(monster.specimens);
-        let locationsHtml = displayLocations(monster.locations);
+        displayLocations(monster.locations);
     };
 }
 
