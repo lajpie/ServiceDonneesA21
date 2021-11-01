@@ -109,8 +109,45 @@
               <tbody>
                   
               </tbody>
+              <tfoot>
+                  <tr class="form-group">
+                        <td>
+                          <input type="text" pattern="[A-Z]{1,2}[0-9]{1,3}" class="form-control " id="txtLocation">
+                        </td>
+                        <td>
+                            <select class="form-select " id="cboTime">
+                                <option>Night</option>
+                                <option>Day</option>
+                                <option>Morning</option>
+                             
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select " id="cboSeason">
+                                <option>Autumn</option>
+                                <option>Spring</option>
+                                <option>Summer</option>
+                                <option>Winter</option>
+                             
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select " id="cboRarity">
+                                <option>Common</option>
+                                <option>Limited</option>
+                                <option>Rare</option>
+                                <option>Uncommon</option>
+                              
+                            </select>
+                        </td>
+                        <td>
+                            <button id="btnAddLocation" class="btn">Add</button>
+                        </td>
+                  </tr>
+              </tfoot>
           </table>
         </div>
+        
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
