@@ -24,6 +24,9 @@ class ExplorationsRoutes {
             let [explorations, itemCount] = await explorationsRepository.retrieveAll(retrieveOptions);
             const pageCount =Math.ceil(itemCount / req.query.limit);
             const hasNextPage = (paginate.hasNextPages(req))(pageCount);
+            const pageArray = paginate.getArrayPages(req)(3,pageCount,req.query.page);
+
+            console.log(pageArray);
 
             explorations = explorations.map(e=> {
                 e = e.toObject({getters: false, virtuals:false});
@@ -41,10 +44,26 @@ class ExplorationsRoutes {
                     totalDocuments: itemCount
                 },
                 _links:{
-                    
+                    first:`/exploration?page=1&limit=${req.query.limit}`,
+                    prev:pageArray[0].url,
+                    self:pageArray[1].url,
+                    next:pageArray[2].url,
+                    last:`/exploration?page=${pageCount}&limit=${req.query.limit}`
                 },
                 data:explorations
             };
+
+            if (req.query.page ===1) {
+                delete response._links.prev;
+                response._links.self = pageArray[0].url;
+                response._links.next = pageArray[1].url;
+            }
+
+            if (!hasNextPage) {
+                delete response._links.next;
+                response._links.self = pageArray[2].url;
+                response._links.prev = pageArray[1].url;
+            }
 
             res.status(200).json(response);
 
